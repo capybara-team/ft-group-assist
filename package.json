@@ -1,8 +1,8 @@
 {
-  "name": "react-materialui-boilerplate",
+  "name": "group-assist-app",
   "version": "1.0.0",
   "private": true,
-  "homepage": "http://maxjf1.github.io/react-material-boilerplate",
+  "homepage": "http://capybara-team.github.io/group-assist-app",
   "dependencies": {
     "@material-ui/core": "^1.2.3",
     "@material-ui/icons": "^1.1.0",
