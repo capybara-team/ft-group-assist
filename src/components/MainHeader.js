@@ -23,9 +23,10 @@ class MainHeader extends Component {
             <div>
                 <Header
                     title="Group Assist FullTeaching"
+                    backButton
                     rightAction={
-                        auth ?
-                            loading ? <CircularProgress color="inherit" /> :
+                        loading ? <CircularProgress color="inherit" /> :
+                            auth ?
                                 <Fragment>
                                     <IconButton
                                         aria-owns={open ? 'user-menu' : null}
@@ -45,7 +46,7 @@ class MainHeader extends Component {
                                         <MenuItem onClick={() => this.closeMenu() || (onLogout && onLogout())}>Logout</MenuItem>
                                     </Menu>
                                 </Fragment> :
-                            <Button color="inherit" onClick={onLogin} >Login</Button>
+                                <Button color="inherit" onClick={onLogin} >Login</Button>
                     }
                 />
             </div>

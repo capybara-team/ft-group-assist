@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GroupAssist from '../GroupAssistMock';
+import GroupAssist from '../GroupAssist';
 import Loader from './Loader';
 import { Slide, List, ListItem, ListItemText, Dialog } from '@material-ui/core';
 import { Link, Route } from 'react-router-dom'
@@ -29,11 +29,11 @@ class GroupsManagers extends Component {
             this.getManager()
     }
 
-    getManager() {
+    getManager = () => {
         this.setState({ loading: true, managers: [] })
         this.api
             .getCourseManagers(this.props.match.params.id)
-            .then(managers => this.setState({ loading: false, managers }))
+            .then(managers => this.setState({ loading: false, managers: Object.values(managers) }))
     }
 
     render() {
@@ -43,18 +43,25 @@ class GroupsManagers extends Component {
             <div>
                 {this.state.loading && <Loader spacing={30} />}
                 <List component="nav">
+                    {!this.state.loading && !this.state.managers.length &&
+                        <ListItem button onClick={this.getManager}>
+                            <ListItemText primary="Nenhum trabalho foi encontrado" secondary="clique para recarregar" />
+                        </ListItem>
+                    }
                     {this.state.managers.map(({ id, name, description }) => (
                         <ListItem key={id} button component={Link} to={`${match.url}/manager/${id}`} >
                             <ListItemText primary={name} secondary={description} />
                         </ListItem>
                     ))}
                 </List>
-                <Route path={match.url + '/:managerId'} children={({ match }) => (
+                <Route path={match.url + '/manager/:managerId'} children={({ match }) => (
                     <Dialog
                         fullScreen
                         open={Boolean(match)}
                         TransitionComponent={ModalTransition}>
-                        <GroupsList />
+                        <GroupsList
+                            managerId={match && match.params.managerId}
+                        />
                     </Dialog>
                 )} />
             </div>

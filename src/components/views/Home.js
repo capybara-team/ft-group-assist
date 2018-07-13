@@ -4,11 +4,11 @@ import { Typography, Button } from '@material-ui/core';
 class Home extends Component {
     render() {
         return (
-            <main>
-                <Typography gutterBottom>
-                    {this.props.children || "Realize login para usar o sistema"}
+            <main style={{ textAlign: 'center', padding: '24vh 0' }} >
+                <Typography  variant="display2" gutterBottom >
+                    {this.props.children || "Bem vindo! Faça login para continuar:"}
                 </Typography>
-                <Button variant="contained" color="secondary" onClick={this.props.onLogin} >Login</Button>
+                <Button variant="contained" color="secondary" size="large" onClick={this.props.onLogin} >Fazer Login</Button>
             </main>
         );
     }

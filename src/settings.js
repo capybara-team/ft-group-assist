@@ -17,4 +17,5 @@ export const theme = createMuiTheme({
 })
 
 export const siteUrl = 'https://atlantis.isti.cnr.it:5000/'
-export const apiUrl = 'https://api.com/'
+export const apiUrl = 'http://group-assist.herokuapp.com/api/'
+export const tokenStorage = 'ga-token'

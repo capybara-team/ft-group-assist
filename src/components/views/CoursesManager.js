@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Drawer, Toolbar, List, ListItem, ListItemText, Avatar, Divider } from '@material-ui/core';
-import { Link, Route } from 'react-router-dom'
-import GroupAssist from '../../GroupAssistMock';
+import { Drawer, Toolbar, List, ListItem, ListItemText, Avatar, Divider, Typography } from '@material-ui/core';
+import { Link, Route, Switch } from 'react-router-dom'
+import GroupAssist from '../../GroupAssist';
 import Loader from '../Loader';
 import GroupsManagers from '../GroupsManagers';
 
@@ -18,9 +18,16 @@ class CoursesManager extends Component {
     }
 
     componentDidMount() {
+        this.getCourses()
+    }
+
+    getCourses = () => {
+        this.setState({ loading: true })
         this.api
             .getCourses()
-            .then(courses => this.setState({ loading: false, courses }))
+            .then(courses => this.setState({ courses }))
+            .catch(console.error)
+            .then(() => this.setState({ loading: false }))
     }
 
     render() {
@@ -31,13 +38,19 @@ class CoursesManager extends Component {
                     variant="permanent"
                 >
                     <Toolbar />
+                    {this.state.loading && <Loader spacing={30} />}
                     <List component="nav" style={{ width: drawerWidth }} >
-                        {this.state.loading && <Loader spacing={30} />}
-                        {this.state.courses.map(({ id, name, description }) =>
+
+                        {!this.state.loading && !this.state.courses.length &&
+                            <ListItem button onClick={this.getCourses}>
+                                <ListItemText primary="Nenhuma turma foi cadastrada" secondary="clique para recarregar" />
+                            </ListItem>
+                        }
+                        {this.state.courses.map(({ id, title }) =>
                             <Fragment key={id}>
                                 <ListItem button component={Link} to={`${match.url}/${id}`} >
-                                    <Avatar children={name.charAt(0)} />
-                                    <ListItemText primary={name} secondary={description} />
+                                    <Avatar children={title.charAt(0)} />
+                                    <ListItemText primary={title} />
                                 </ListItem>
                                 <Divider inset />
                             </Fragment>
@@ -45,7 +58,10 @@ class CoursesManager extends Component {
                     </List>
                 </Drawer>
                 <div style={{ marginLeft: drawerWidth }} >
-                    <Route path={match.url + '/:id'} component={GroupsManagers} />
+                    <Switch>
+                        <Route path={match.url + '/:id'} component={GroupsManagers} />
+                        <Route render={() => <Typography variant="display1" align="center" >Selecione um curso</Typography>} />
+                    </Switch>
                 </div>
             </main>
         );

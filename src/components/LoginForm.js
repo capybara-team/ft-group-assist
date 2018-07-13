@@ -17,7 +17,7 @@ class LoginForm extends Component {
     }
 
     render() {
-        const { onClose, onSubmit, loading, ...dialogProps } = this.props
+        const { onClose, onSubmit, onErrorClose, error, loading, ...dialogProps } = this.props
         return (
             <Dialog aria-labelledby="login-title" onClose={onClose} {...dialogProps}>
                 <form onSubmit={this.onSubmit}>

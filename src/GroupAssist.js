@@ -21,13 +21,8 @@ export default class GroupAssist {
         if (!url.endsWith('/'))
             url += '/'
 
-        this.api = axios.create({
+        this.api = window.api = axios.create({
             baseURL: url,
-            transformResponse: [
-                response => response.status(200) ?
-                    response.data :
-                    response
-            ],
         })
         this.token = token
     }
@@ -52,17 +47,26 @@ export default class GroupAssist {
         return this.instance || (this.instance = new this(props))
     }
 
+    extractData = ({ data }) => data
+
     /**
      * Generates Authentication
      *
      * @memberof GroupAssist
      */
-    auth = ({ email, password }) => this.api
-        .post('login', { email, password })
+    auth = ({ email, password }) => this.api({
+        method: 'POST',
+        data: { email, password },
+        url: 'login'
+    })
+        .then(this.extractData)
         .then((data) => {
-            this.token = data.acess_token
+            this.token = data.access_token
             return data
         })
+
+
+    getUser = () => this.api.get('user').then(this.extractData)
 
     /**
      * Removes Authentication
@@ -71,6 +75,7 @@ export default class GroupAssist {
      */
     logout = () => this.api
         .post('logout')
+        .then(this.extractData)
         .then(data => {
             this.token = null
             return data
@@ -79,25 +84,25 @@ export default class GroupAssist {
     /**
      * Courses Routes
      */
-    getCourses = () => this.api.get('courses')
-    getCourseManagers = course => this.api.get(`courses/${course}/managers`)
+    getCourses = () => this.api.get('courses').then(this.extractData)
+    getCourseManagers = course => this.api.get(`courses/${course}/managers`).then(this.extractData)
 
     /**
      * Group Manager Routes
      */
-    addManager = data => this.api.post(`managers`, data)
-    getManager = manager => this.api.get(`managers/${manager}`)
-    deleteManager = manager => this.api.delete(`managers/${manager}`)
-    getManagerGroups = manager => this.api.get(`managers/${manager}/groups`)
+    addManager = data => this.api.post(`managers`, data).then(this.extractData)
+    getManager = manager => this.api.get(`managers/${manager}`).then(this.extractData)
+    deleteManager = manager => this.api.delete(`managers/${manager}`).then(this.extractData)
+    getManagerGroups = manager => this.api.get(`managers/${manager}/groups`).then(this.extractData)
 
     /**
      * Group Routes
      */
-    addGroup = data => this.api.post(`groups`, data)
-    getGroup = group => this.api.get(`groups/${group}`)
-    deleteGroup = group => this.api.delete(`groups/${group}`)
-    joinGroup = group => this.api.put(`groups/${group}/join`)
-    leaveGroup = group => this.api.put(`groups/${group}/leave`)
+    addGroup = data => this.api.post(`groups`, data).then(this.extractData)
+    getGroup = group => this.api.get(`groups/${group}`).then(this.extractData)
+    deleteGroup = group => this.api.delete(`groups/${group}`).then(this.extractData)
+    joinGroup = group => this.api.put(`groups/${group}/join`).then(this.extractData)
+    leaveGroup = group => this.api.put(`groups/${group}/leave`).then(this.extractData)
 
     /**
      * Update Auth Token
