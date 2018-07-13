@@ -24,17 +24,18 @@ class Header extends Component {
     goBack = () => window.history.back()
 
     render() {
-        const { children, classes, title, backButton = false, rightAction, appBarProps, ...props } = this.props
+        const { children, classes, title, backButton = false, backButtonIcon, rightAction, appBarProps, ...props } = this.props
 
         return (
             <AppBar className={classes.root} position="sticky" {...appBarProps} {...props}>
                 <Toolbar>
-                    <div className={classes.menuButtonWrapper}>
-                        {backButton &&
-                            <IconButton color="inherit" aria-label="Menu" onClick={this.goBack}>
-                                <ArrowBackIcon />
-                            </IconButton>}
-                    </div>
+                    {backButton &&
+                        <div className={classes.menuButtonWrapper}>
+                            <IconButton color="inherit" aria-label="back" onClick={this.goBack}>
+                                {backButtonIcon || <ArrowBackIcon />}
+                            </IconButton>
+                        </div>
+                    }
 
                     {title &&
                         <Typography variant="title" color="inherit" className={classes.flex}>

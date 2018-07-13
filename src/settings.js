@@ -15,3 +15,6 @@ export const theme = createMuiTheme({
         secondary,
     },
 })
+
+export const siteUrl = 'https://atlantis.isti.cnr.it:5000/'
+export const apiUrl = 'https://api.com/'

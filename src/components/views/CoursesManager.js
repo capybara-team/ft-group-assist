@@ -1,17 +1,28 @@
 import React, { Component, Fragment } from 'react';
 import { Drawer, Toolbar, List, ListItem, ListItemText, Avatar, Divider } from '@material-ui/core';
-import { Link, Switch, Route } from 'react-router-dom'
+import { Link, Route } from 'react-router-dom'
+import GroupAssist from '../../GroupAssistMock';
+import Loader from '../Loader';
+import GroupsManagers from '../GroupsManagers';
 
 const drawerWidth = 320
-const list = [
-    { id: 1, name: "Física", description: "Trabalho de Física", },
-    { id: 2, name: "Matemática", description: "Trabalho de Matemática" },
-    { id: 3, name: "Português", description: "Trabalho de Português" },
-    { id: 4, name: "Química", description: "Trabalho de Química" },
-    { id: 5, name: "Artes", description: "Trabalho de Artes" },
-]
 
-class GroupManager extends Component {
+class CoursesManager extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: true,
+            courses: []
+        }
+        this.api = GroupAssist.init()
+    }
+
+    componentDidMount() {
+        this.api
+            .getCourses()
+            .then(courses => this.setState({ loading: false, courses }))
+    }
+
     render() {
         const { match = { url: '' } } = this.props
         return (
@@ -21,9 +32,10 @@ class GroupManager extends Component {
                 >
                     <Toolbar />
                     <List component="nav" style={{ width: drawerWidth }} >
-                        {list.map(({ id, name, description }) =>
+                        {this.state.loading && <Loader spacing={30} />}
+                        {this.state.courses.map(({ id, name, description }) =>
                             <Fragment key={id}>
-                                <ListItem button component={Link} to={`/groups/${id}`} >
+                                <ListItem button component={Link} to={`${match.url}/${id}`} >
                                     <Avatar children={name.charAt(0)} />
                                     <ListItemText primary={name} secondary={description} />
                                 </ListItem>
@@ -33,18 +45,11 @@ class GroupManager extends Component {
                     </List>
                 </Drawer>
                 <div style={{ marginLeft: drawerWidth }} >
-                    <Switch>
-                        <Route path={match.url + '/:id'} render={({ match }) =>
-                            <div>
-                                Grupo: {match.params.id}
-                            </div>
-                        } />
-
-                    </Switch>
+                    <Route path={match.url + '/:id'} component={GroupsManagers} />
                 </div>
             </main>
         );
     }
 }
 
-export default GroupManager;
+export default CoursesManager;

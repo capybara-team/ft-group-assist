@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@material-ui/core';
+import { siteUrl } from '../settings';
 
 class LoginForm extends Component {
     constructor(props) {
@@ -28,6 +29,7 @@ class LoginForm extends Component {
                             required
                             type="email"
                             name="email"
+                            autoComplete="email"
                             margin="dense"
                             label="Email"
                             value={this.state.email}
@@ -39,6 +41,7 @@ class LoginForm extends Component {
                             required
                             type="password"
                             name="senha"
+                            autoComplete="password"
                             margin="dense"
                             label="Senha"
                             value={this.state.pass}
@@ -62,7 +65,7 @@ class LoginForm extends Component {
                         </DialogActions>
                         <DialogActions>
                             <DialogContentText>Ainda não é registrado?</DialogContentText>
-                            <Button component="a" href="https://atlantis.isti.cnr.it:5000/" title="Inscrever-se no FullTeaching" target="_blank" >Inscrever-se</Button>
+                            <Button component="a" href={siteUrl} title="Inscrever-se no FullTeaching" target="_blank" >Inscrever-se</Button>
                         </DialogActions>
                     </DialogContent>
                 </form>
