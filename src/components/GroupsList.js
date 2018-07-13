@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Close as CloseIcon } from '@material-ui/icons'
 import Header from './Header';
 import GroupAssist from '../GroupAssist';
 import Loader from './Loader';
-import { List, ListItem, ListItemText, ListItemIcon, ListItemSecondaryAction, Button } from '@material-ui/core';
-import { Star } from '@material-ui/icons'
+import { List, ListItem, ListItemText, ListItemIcon, ListItemSecondaryAction, Button, Divider } from '@material-ui/core';
+import { Star, StarBorder } from '@material-ui/icons'
 
 class GroupsList extends Component {
     constructor(props) {
@@ -99,24 +99,38 @@ class GroupsList extends Component {
                             <ListItemText primary="Nenhum grupo foi encontrado" secondary="clique para recarregar" />
                         </ListItem>
                     }
-                    {this.state.groups.map(({ id, name, description, members }) => {
+                    {this.state.groups.map(({ id, name, description, members, owner }) => {
                         const isMember = this.state.user && members.find(({ id }) => id == this.state.user.id)
                         return (
-                            <ListItem key={id}>
-                                {isMember &&
+                            <Fragment>
+                                <ListItem key={id}>
                                     <ListItemIcon>
-                                        <Star />
+                                        {isMember ?
+                                            <Star /> :
+                                            <StarBorder />
+                                        }
                                     </ListItemIcon>
-                                }
-                                <ListItemText inset primary={name} secondary={description} />
-                                <ListItemSecondaryAction>
-                                    {isMember ?
-                                        <Button disabled={loading} size="small" variant="raised" color="secondary" onClick={this.leaveGroup}>Sair</Button>
-                                        :
-                                        <Button disabled={loading} size="small" variant="raised" color="primary" onClick={() => this.joinGroup(id)}>Entrar</Button>
-                                    }
-                                </ListItemSecondaryAction>
-                            </ListItem>
+                                    <ListItemText inset primary={name} secondary={description} />
+                                    <ListItemSecondaryAction>
+                                        {isMember ?
+                                            <Button disabled={loading} size="small" variant="raised" color="secondary" onClick={this.leaveGroup}>Sair</Button>
+                                            :
+                                            <Button disabled={loading} size="small" variant="raised" color="primary" onClick={() => this.joinGroup(id)}>Entrar</Button>
+                                        }
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                                <List disablePadding>
+                                    <ListItem >
+                                        <ListItemText inset primary={owner.name} secondary="Dono" />
+                                    </ListItem>
+                                    {members.map(member =>
+                                        <ListItem >
+                                            <ListItemText inset primary={member.name} secondary="Membro" />
+                                        </ListItem>
+                                    )}
+                                </List>
+                                <Divider />
+                            </Fragment>
                         )
                     })}
                 </List>
